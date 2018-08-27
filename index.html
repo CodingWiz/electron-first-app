@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <title>Shopping List</title>
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper">
+            <a class="brand-logo center">Shopping List</a>
+        </div>
+    </nav>
+
+    <ul></ul>
+
+    <script>
+        const {ipcRenderer} = require('electron');
+        const ul = document.querySelector('ul');
+
+        //add item
+        ipcRenderer.on('item:add', function(e, item) {
+            const li = document.createElement('li');
+            const itemText = document.createTextNode(item);
+
+            li.className = 'collection-item';
+            ul.className = 'collection';
+
+            li.appendChild(itemText);
+            ul.appendChild(li);
+        });
+
+        //clear items
+        ipcRenderer.on('item:clear', function() {
+            ul.innerHTML = '';
+            ul.className = '';
+        });
+
+        //remove item
+        ul.addEventListener('dblclick', function(e) {
+            e.target.remove();
+            if(ul.children.length == 0) {
+                ul.className = '';
+            }
+        });
+    </script>
+</body>
+</html>
